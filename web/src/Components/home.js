@@ -56,14 +56,18 @@ export default function StickyHeadTable() {
   const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
 
-
+  
   useEffect(()=> {
+    const token = localStorage.getItem('user');
+    if(!token) {
+      navigate('/login');
+    }
     axios.get(`http://localhost:9002/`)
     .then(res => {
       var usersData = res.data;
       setUsersData( usersData );
     })
-  }, []);
+  }, [usersData._id]);
   
   const handleDelete = () => {
     setOpen(true);
@@ -73,10 +77,10 @@ export default function StickyHeadTable() {
     setOpen(false);
     axios.delete(`http://localhost:9002/${id}`)
     .then(res => {
-      // console.log("User deleted");
+      console.log("User deleted");
     })
     .catch(err=> {
-      // console.log(err);
+      console.log(err);
     })
     axios.get(`http://localhost:9002/`)
     .then(res => {
@@ -87,7 +91,8 @@ export default function StickyHeadTable() {
 
   const closeDialog = () => {
     setOpen(false);
-  }
+  } 
+
 
   const editUser = (id) => {
     navigate('/edit/' + `${id}`)

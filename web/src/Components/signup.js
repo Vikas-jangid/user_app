@@ -40,7 +40,7 @@ export default function SignUp() {
 
 
   const registerUser = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     console.log(user);
     axios.post("http://localhost:9002/signUp", user)
     .then(response => {
@@ -50,6 +50,7 @@ export default function SignUp() {
       console.log(error);
     })
     navigate(`/`);
+    return false;
   };
 
   return (
@@ -82,7 +83,7 @@ export default function SignUp() {
                   autoFocus
                   value={user.first_name}
                   onChange={(e)=> {setUser({...user, ...{firstName:e.target.value}})}}
-                  {...register("firstName", {required: "First Name is required"})}
+                  // {...register("firstName", {required: "First Name is required"})}
                   error={!!errors.firstName}
                   helperText={errors.firstName ? errors.firstName.message : null }
                 />
@@ -97,9 +98,9 @@ export default function SignUp() {
                   autoComplete="lastName"
                   value={user?.last_name}
                   onChange={(e)=> {setUser({...user, ...{lastName:e.target.value}})}}
-                  {...register("lastName", {required: "Last Name is required"})}
-                  error={!!errors.lastName}
-                  helperText={errors.lastName ? errors.lastName.message : null }
+                  // {...register("lastName", {required: "Last Name is required"})}
+                  // error={!!errors.lastName}
+                  // helperText={errors.lastName ? errors.lastName.message : null }
                 />
               </Grid>
               <Grid item xs={12}>
@@ -112,9 +113,9 @@ export default function SignUp() {
                   autoComplete="email"
                   value={user.email}
                   onChange={(e)=> {setUser({...user, ...{email:e.target.value}})}}
-                  {...register("email", {required: "email is required"})}
-                  error={!!errors.email}
-                  helperText={errors.email ? errors.email.message : null }
+                  // {...register("email", {required: "email is required"})}
+                  // error={!!errors.email}
+                  // helperText={errors.email ? errors.email.message : null }
                 />
               </Grid>
               <Grid item xs={12}>
@@ -128,9 +129,9 @@ export default function SignUp() {
                   autoComplete="contactNumber"
                   value={user.contact_number}
                   onChange={(e)=> {setUser({...user, ...{contactNumber:e.target.value}})}}
-                  {...register("contactNumber", {required: "Contact is required"})}
-                  error={!!errors.contactNumber}
-                  helperText={errors.contactNumber ? errors.contactNumber.message : null }
+                  // {...register("contactNumber", {required: "Contact is required"})}
+                  // error={!!errors.contactNumber}
+                  // helperText={errors.contactNumber ? errors.contactNumber.message : null }
                   />
               </Grid>
               <Grid item xs={12}>
@@ -140,11 +141,11 @@ export default function SignUp() {
                   options={gender}
                   renderInput={(params) => <TextField 
                                               {...params} label="Gender"
-                                              {...register("gender", {required: "gender is required"})}
-                                              error={!!errors.gender}
-                                              helperText={errors.gender ? errors.gender.message : null }
+                                              // {...register("gender", {required: "gender is required"})}
+                                              // error={!!errors.gender}
+                                              // helperText={errors.gender ? errors.gender.message : null }
+                                              value={user?.gender}
                                           />} 
-                  value={user?.gender}
                   onChange={(e,value)=> {setUser({...user, ...{gender:value}})}}
                   
                 />
@@ -160,9 +161,9 @@ export default function SignUp() {
                   autoComplete="new-password"
                   value={user.password}
                   onChange={(e)=> {setUser({...user, ...{password:e.target.value}})}}
-                  {...register("password", {required: "password is required"})}
-                  error={!!errors.password}
-                  helperText={errors.password ? errors.password.message : null }
+                  // {...register("password", {required: "password is required"})}
+                  // error={!!errors.password}
+                  // helperText={errors.password ? errors.password.message : null }
                 />
               </Grid>
               <Grid item xs={12}>
@@ -175,9 +176,9 @@ export default function SignUp() {
                   id="confirmPassword"
                   autoComplete="confirmPassword"
                   onChange={(e)=> {setUser({...user, ...{confirmPassword:e.target.value}})}}
-                  {...register("confirmPassword", {required: "confirm password is required"})}
-                  error={!!errors.confirmPassword}
-                  helperText={errors.confirmPassword ? errors.confirmPassword.message : null }
+                  // {...register("confirmPassword", {required: "confirm password is required"})}
+                  // error={!!errors.confirmPassword}
+                  // helperText={errors.confirmPassword ? errors.confirmPassword.message : null }
                 />
               </Grid>
             </Grid>

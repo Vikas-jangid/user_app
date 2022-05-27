@@ -1,5 +1,6 @@
 import './App.css';
 import {BrowserRouter as Router, Routes, Route} from  'react-router-dom';
+import React, {useEffect} from 'react';
 import Home from './Components/home';
 import Login from './Components/login';
 import Signup from './Components/signup';
@@ -8,6 +9,11 @@ import Appbar from './Components/appbar'
 import EditUser from './Components/editUser';
 
 function App() {
+  
+  // useEffect(()=>{
+  //   <Appbar />
+  // },[]) 
+
   return (
     <Router>
       <Appbar />

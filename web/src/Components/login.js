@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -11,6 +11,13 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+// import PropTypes from 'prop-types';
+import axios from 'axios';
+import {useNavigate} from 'react-router-dom';
+import AlertMassage from "./alertMessage";
+
+
+
 
 function Copyright(props) {
   return (
@@ -28,14 +35,41 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignIn() {
-  const handleSubmit = (event) => {
+
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
+  const [status, setStatusBase] = useState();
+  const navigate = useNavigate();
+  
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
       email: data.get('email'),
       password: data.get('password'),
     });
+    await axios.post("http://localhost:9002/login", {
+      email,
+      password,
+    })
+    .then((response) => {
+      console.log(response, "login response")
+      if (response.data.token) {
+        const tokenCheck = response.data.token;
+        localStorage.setItem("user", JSON.stringify(response.data.token));
+        console.log(tokenCheck, "token mila");
+        setStatusBase({ msg: "Login Success", key: Math.random() });
+      }
+      navigate("/");
+      window.location.reload();
+      return response.data;
+    })
+    .catch(error => {
+      console.log(error);
+      setStatusBase({ msg: "Login Failed", key: Math.random() });
+    })
   };
+
 
   return (
     <ThemeProvider theme={theme} >
@@ -65,6 +99,7 @@ export default function SignIn() {
               name="email"
               autoComplete="email"
               autoFocus
+              onChange={e => setEmail(e.target.value)}
             />
             <TextField
               margin="normal"
@@ -75,6 +110,7 @@ export default function SignIn() {
               type="password"
               id="password"
               autoComplete="current-password"
+              onChange={e => setPassword(e.target.value)}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}

@@ -3,69 +3,111 @@ import cors from "cors";
 import dbConnect from './db/dbConnection.js';
 import User from "./models/userSchema.js";
 import bodyParser from 'body-parser';
+import dotenv from 'dotenv';
+import jwt from 'jsonwebtoken';
+import * as bcrypt from 'bcrypt';
+import verify from "./middleware.js";
 
 const app = express();
 app.use(bodyParser.urlencoded({extended : true}));
 app.use(bodyParser.json());
 app.use(cors());    
 
+dotenv.config();
+
+const tokenSecret = "my-token-secret"
+
+const generateToken = (user) => {
+  return jwt.sign({data: user}, tokenSecret, {expiresIn: '24h'})
+}
+
+
 //Routes 
 
+//jwt-verify
+app.get('/jwt-test', verify, (req, res) => {
+  res.status(200).json(req.user)
+})
+
+
+//get all users
 app.get('/', (req, res) => {
   User.find({ }, (error, data) => {
     res.status(200).results;
     res.send(data);
   });
-});5
+});
 
+
+//get single user
 app.get('/:id', (req, res) => {
-  console.log(req.params.id, "getting id")
-
-  // User.findById(req.params.id , (error, user) => {
-  //   if (user) {
-  //     console.log(user, "SINGLE USER FOUND")
-  //     res.send(user)
-  //   } else {
-  //     console.log('error', error)
-  //   }
-  // });
-  //find post by id
-  try {
-      const user = User.findOne({id: req.params.id});
-      res.send(user);
-  } catch(error) {
-      res.status(200).send(error);
-  }
+  User.findById(req.params.id , (error, user) => {
+    if (user) {
+      res.send(user)
+    } else {
+      console.log('error', error)
+    }   
+  });
 });
 
-app.post('/signUp', (req, res) => {
-  console.log(req.body);
-    const user = new User(
-      {
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        email: req.body.email,
-        contactNumber: req.body.contactNumber,
-        gender: req.body.gender,
-        password: req.body.password,
-        confirmPassword: req.body.confirmPassword,
-      },
-    );
-    return user.save()
-      .then(result => {
-        console.log(result);
-        res.status(200).json({
-          userData: result
+
+//signup user
+const rounds = 10;
+app.post('/signup', (req, res) => {
+  bcrypt.hash(req.body.password , rounds, (error, hash)=> {
+    if(error) {
+      res.status(500).json(error)
+    }
+    else{
+      const user = new User(
+        {
+          firstName: req.body.firstName,
+          lastName: req.body.lastName,
+          email: req.body.email,
+          contactNumber: req.body.contactNumber,
+          gender: req.body.gender,
+          password: hash,
+          confirmPassword: hash,
+        });
+      user.save()
+        .then(user => {
+          res.status(200).json(user)
         })
-      })
-      .catch(err => {
-      console.log(err);
-      res.status(500).json({
-        error:err
-      })
-    });
+        .catch(error=>{
+          res.status(500).json(error)
+        })
+      }
+  });
 });
 
+//User Login
+app.post("/login",  (req, res) => {
+  User.findOne({email: req.body.email})
+  .then(user => {
+    if(!user) {
+      res.status(404).json({error:"no user found with this email"})
+    }
+    else {
+      bcrypt.compare(req.body.password, user.password, (error , match) => {
+        if(error) {
+          res.status(500).json(error)
+        }
+        else if(match){
+          res.status(200).json({token: generateToken(user)})
+        }
+        else {
+          res.status(403).json({error: "password is incorrect"})
+        }
+      });
+    }
+  })
+  .catch(error => {
+    res.status(500).json(error)
+  })
+});
+
+
+//edit user
 app.put('/user/:id', (req, res) => {
   const { id } = req.params;
   console.log(id, "id mil gyi");
@@ -95,7 +137,7 @@ app.put('/user/:id', (req, res) => {
   })
  });
 
-
+//delete user
 app.delete('/:id', (req, res) => {
   User.deleteOne({ _id: req.params.id }, (err, data) => {
     if (!err) {
@@ -106,7 +148,7 @@ app.delete('/:id', (req, res) => {
   });
 });
 
-
-app.listen(9002, ()=> {
-    console.log("BackEnd is running at port 9002");
+let PORT = process.env.PORT || 9002;
+app.listen(PORT, () => {
+  console.log(`Server is up and running on ${PORT} ...`);
 });
