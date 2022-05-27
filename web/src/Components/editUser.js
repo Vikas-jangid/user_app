@@ -14,7 +14,6 @@ import axios from 'axios';
 import {useNavigate} from 'react-router-dom';
 import { useForm } from  'react-hook-form';
 
-
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -29,32 +28,32 @@ function Copyright(props) {
 }
 
 const theme = createTheme();
-
 const gender = ["Male", "Female", "other"];
 
 export default function Update() {
 
   const [user, setUser] = useState({});
   const navigate = useNavigate();
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { register, formState: { errors } } = useForm();
 
-  
   useEffect(()=> {
     loadUser();
   }, []);
 
-  const loadUser = (id) => {
+  const loadUser = (e) => {   
+    var urlString = (window.location).href; 
+    var id =  urlString.substr(urlString.length - 24);
     axios.get(`http://localhost:9002/${id}`)
     .then(res => {
       var usersData = res.data;
-      setUser( usersData );
-      console.log(usersData,"getting single user");
+      setUser( usersData )
     })
   }
 
-  const updateUser = (e, id) => {
+  const updateUser = (e) => {
     e.preventDefault();
-    console.log(user);
+    var urlString = (window.location).href; 
+    var id =  urlString.substr(urlString.length - 24);
     axios.put(`http://localhost:9002/user/${id}`, user)
     .then(response => {
       console.log(response);
@@ -81,10 +80,11 @@ export default function Update() {
           </Avatar> 
           <Typography component="h1" variant="h5">
             Edit User
-          </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit(updateUser)} sx={{ mt: 3 }}>
+          </Typography> 
+          <Box component="form" noValidate onSubmit={updateUser} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
+
                 <TextField
                   autoComplete="first-name"
                   name="firstName"
@@ -92,12 +92,12 @@ export default function Update() {
                   fullWidth
                   id="firstName"
                   label="First Name"
-                  autoFocus
-                  value={user?.firstName}
+                 autoFocus
+                  value={user.firstName}
                   onChange={(e)=> {setUser({...user, ...{firstName:e.target.value}})}}
-                  {...register("firstName", {required: "First Name is required"})}
-                  error={!!errors.firstName}
-                  helperText={errors.firstName ? errors.firstName.message : null }
+                  // {...register("firstName", {required: "First Name is required"})}
+                  // error={!!errors.firstName}
+                  // helperText={errors?.firstName ? errors.firstName.message : null }
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -110,9 +110,9 @@ export default function Update() {
                   autoComplete="lastName"
                   value={user?.lastName}
                   onChange={(e)=> {setUser({...user, ...{lastName:e.target.value}})}}
-                  {...register("lastName", {required: "Last Name is required"})}
-                  error={!!errors.lastName}
-                  helperText={errors.lastName ? errors.lastName.message : null }
+                  // {...register("lastName", {required: "Last Name is required"})}
+                  // error={!!errors.lastName}
+                  // helperText={errors?.lastName ? errors.lastName.message : null }
                 />
               </Grid>
               <Grid item xs={12}>
@@ -125,9 +125,9 @@ export default function Update() {
                   autoComplete="email"
                   value={user?.email}
                   onChange={(e)=> {setUser({...user, ...{email:e.target.value}})}}
-                  {...register("email", {required: "email is required"})}
-                  error={!!errors.email}
-                  helperText={errors.email ? errors.email.message : null }
+                  // {...register("email", {required: "email is required"})}
+                  //  error={!!errors.email}
+                  // helperText={errors?.email ? errors.email.message : null }
                 />
               </Grid>
               <Grid item xs={12}>
@@ -139,12 +139,12 @@ export default function Update() {
                   label="Contact Number"
                   name="contactNumber"
                   autoComplete="contactNumber"
-                  value={user?.contactNumber}
-                  onChange={(e)=> {setUser({...user, ...{contactNumber:e.target.value}})}}
-                  {...register("contactNumber", {required: "Contact is required"})}
-                  error={!!errors.contactNumber}
-                  helperText={errors.contactNumber ? errors.contactNumber.message : null }
-                  />
+                 value={user?.contactNumber}
+                  onChange={(e)=> {console.log(e.target.value)}}
+                  //{...register("contactNumber", {required: "Contact is required"})}
+                   //error={!!errors.contactNumber}
+                   //helperText={errors?.contactNumber ? errors.contactNumber.message : null }
+                />
               </Grid>
               <Grid item xs={12}>
                 <Autocomplete
@@ -152,13 +152,12 @@ export default function Update() {
                     fullWidth
                     options={gender}
                     renderInput={(params) => <TextField {...params} label="Gender" name="gender" id="gender"
-                                                {...register("gender", {required: "gender is required"})}
-                                                error={!!errors.gender}
-                                                helperText={errors.gender ? errors.gender.message : null }
+                                                // {...register("gender", {required: "gender is required"})}
+                                                // error={!!errors.gender}
+                                                // helperText={errors?.gender ? errors.gender.message : null }
                                                 value={user?.gender}
                                             />} 
-                    // value={user?.gender}
-                    onChange={(e)=> {setUser({...user, ...{gender:e.target.value}})}}
+                    onChange={(e, value)=> {setUser({...user, ...{gender:value}})}}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -172,9 +171,9 @@ export default function Update() {
                   autoComplete="new-password"
                   value={user?.password}
                   onChange={(e)=> {setUser({...user, ...{password:e.target.value}})}}
-                  {...register("password", {required: "password is required"})}
-                  error={!!errors.password}
-                  helperText={errors.password ? errors.password.message : null }
+                  // {...register("password", {required: "password is required"})}
+                  // error={!!errors.password}
+                  // helperText={errors.password ? errors.password.message : null }
                 />
               </Grid>
               <Grid item xs={12}>
@@ -188,9 +187,9 @@ export default function Update() {
                   value={user?.confirmPassword}
                   autoComplete="confirmPassword"
                   onChange={(e)=> {setUser({...user, ...{confirmPassword:e.target.value}})}}
-                  {...register("confirmPassword", {required: "confirm password is required"})}
-                  error={!!errors.confirmPassword}
-                  helperText={errors.confirmPassword ? errors.confirmPassword.message : null }
+                  // {...register("confirmPassword", {required: "confirm password is required"})}
+                  // error={!!errors.confirmPassword}
+                  // helperText={errors.confirmPassword ? errors.confirmPassword.message : null }
                 />
               </Grid>
             </Grid>
