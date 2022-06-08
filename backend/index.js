@@ -113,11 +113,9 @@ app.post("/login",  (req, res) => {
 app.post('/forgetPassword', async (req, res) => {
   const email = req.body.email;
   const userData = await User.findOne({email : email});
-  console.log(userData,"forgot password userData")
  if(userData){
   const randomString = Randomstring.generate();  
-  await User.updateOne({email: email},{$set: {token:randomString}});
-  console.log(email);
+  await User.findOneAndUpdate({email: email},{$set: {token:randomString}});
   resetPasswordEmail(email, randomString);
   res.status(200).send("Check inbox of email and reset your password");
  }else {
@@ -164,7 +162,6 @@ app.post('/resetPassword/:token', async(req, res) => {
 //edit user
 app.put('/user/:id', (req, res) => {
   const { id } = req.params;
-  console.log(id, "id mil gyi");
   console.log(req.body);
   User.findOneAndUpdate({_id:id}, {
     $set:{

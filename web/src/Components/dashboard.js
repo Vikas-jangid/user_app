@@ -19,6 +19,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import {useNavigate} from 'react-router-dom';
 import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
 
 
 
@@ -111,71 +112,73 @@ export default function StickyHeadTable() {
 
 
   return (
-    <Box sx={{ flexGrow: 2 }}>
-      <Paper sx={{ width: '100%', overflow: 'hidden', mt: 10 }}>
-        <TableContainer sx={{ maxHeight: 440 }}>
-          <Table stickyHeader aria-label="sticky table">
-            <TableHead>
-              <TableRow>
-                {columns.map((column) => (
-                  <TableCell
-                    key={column.id}
-                    align={column.align}
-                    style={{ minWidth: column.minWidth }}
-                  >
-                    {column.label}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {usersData
-                .map((row) => {
-                  return (
-                    <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                      <TableCell>{row.firstName}</TableCell>
-                      <TableCell>{row.lastName}</TableCell>
-                      <TableCell>{row.gender}</TableCell>
-                      <TableCell>{row.email}</TableCell>
-                      <TableCell>{row.contactNumber}</TableCell>
-                      <TableCell>{<DeleteIcon onClick={() =>  handleDelete(row._id)} className={classes.delete} />} {<CreateIcon onClick={() => editUser(row._id)} className={classes.delete}/>}</TableCell>
-                      <Dialog
-                        open={open}
-                        onClose={handleDelete}
-                        aria-labelledby="alert-dialog-title"
-                        aria-describedby="alert-dialog-description"
-                      >
-                        <DialogTitle id="alert-dialog-title">
-                          {"Delete Confirmation"}
-                        </DialogTitle>
-                        <DialogContent>
-                          <DialogContentText id="alert-dialog-description">
-                          Do Your Really Want To Remove This User.?
-                          </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                          <Button onClick={closeDialog}>NO</Button>
-                          <Button onClick={()=>deleteUser(row._id)} autoFocus>
-                            YES
-                          </Button>
-                        </DialogActions>
-                      </Dialog>
-                    </TableRow>
-                  );
-                })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[10, 25, 100]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </Paper>
-    </Box>
+    <Container maxWidth="xl">
+      <Box sx={{ flexGrow: 2 }}>
+        <Paper sx={{ width: '100%', overflow: 'hidden', mt: 10 }}>
+          <TableContainer sx={{ maxHeight: 440 }}>
+            <Table stickyHeader aria-label="sticky table">
+              <TableHead>
+                <TableRow>
+                  {columns.map((column) => (
+                    <TableCell
+                      key={column.id}
+                      align={column.align}
+                      style={{ minWidth: column.minWidth }}
+                    >
+                      {column.label}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {usersData
+                  .map((row) => {
+                    return (
+                      <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+                        <TableCell>{row.firstName}</TableCell>
+                        <TableCell>{row.lastName}</TableCell>
+                        <TableCell>{row.gender}</TableCell>
+                        <TableCell>{row.email}</TableCell>
+                        <TableCell>{row.contactNumber}</TableCell>
+                        <TableCell>{<DeleteIcon onClick={() =>  handleDelete(row._id)} className={classes.delete} />} {<CreateIcon onClick={() => editUser(row._id)} className={classes.delete}/>}</TableCell>
+                        <Dialog
+                          open={open}
+                          onClose={handleDelete}
+                          aria-labelledby="alert-dialog-title"
+                          aria-describedby="alert-dialog-description"
+                        >
+                          <DialogTitle id="alert-dialog-title">
+                            {"Delete Confirmation"}
+                          </DialogTitle>
+                          <DialogContent>
+                            <DialogContentText id="alert-dialog-description">
+                            Do Your Really Want To Remove This User.?
+                            </DialogContentText>
+                          </DialogContent>
+                          <DialogActions>
+                            <Button onClick={closeDialog}>NO</Button>
+                            <Button onClick={()=>deleteUser(row._id)} autoFocus>
+                              YES
+                            </Button>
+                          </DialogActions>
+                        </Dialog>
+                      </TableRow>
+                    );
+                  })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[10, 25, 100]}
+            component="div"
+            count={rows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Paper>
+      </Box>
+    </Container>
   );
 }

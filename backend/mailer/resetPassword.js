@@ -12,7 +12,6 @@ export const resetPasswordEmail = (email, token) => {
     };
     transporter.sendMail(mailOptions, (err, data) => {
       if (err) {
-        console.log(err)
         return err;
       }
       else{
