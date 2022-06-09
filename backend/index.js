@@ -7,6 +7,8 @@ import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcrypt';
 import verify from "./middleware.js";
+import Randomstring from "randomstring";
+import { resetPasswordEmail } from "./mailer/resetPassword.js";
 
 const app = express();
 app.use(bodyParser.urlencoded({extended : true}));
@@ -54,7 +56,7 @@ app.get('/:id', (req, res) => {
 //signup user
 const rounds = 10;
 app.post('/signup', (req, res) => {
-  bcrypt.hash(req.body.password , rounds, (error, hash)=> {
+  bcrypt.hash(req.body.password, rounds, (error, hash)=> {
     if(error) {
       res.status(500).json(error)
     }
@@ -106,11 +108,60 @@ app.post("/login",  (req, res) => {
   })
 });
 
+//forget password
 
+app.post('/forgetPassword', async (req, res) => {
+  const email = req.body.email;
+  const userData = await User.findOne({email : email});
+ if(userData){
+  const randomString = Randomstring.generate();  
+  await User.findOneAndUpdate({email: email},{$set: {token:randomString}});
+  resetPasswordEmail(email, randomString);
+  res.status(200).send("Check inbox of email and reset your password");
+ }else {
+   res.status(404).send("This email is not registered");
+ }
+
+})
+
+//Reset Password
+app.post('/resetPassword/:token', async(req, res) => {
+    const { token } = req.params;
+    const userData = await User.find({ token: token })
+    console.log(userData, "userData");
+     if(userData){
+      const tokenData = userData.map((a)=>{
+        let  tokenValue = a.token;
+        return tokenValue
+      });
+      bcrypt.hash(req.body.password, rounds, (error, hash)=> {   
+          User.findOneAndUpdate({ token : tokenData.toString() } , {
+            $set:{
+            password: hash,
+            confirmPassword: hash,
+            token:''
+          }},{new:true})
+        .then(user => {
+          if(user.password === user.confirmPassword){
+            user.save()
+          }
+          else {
+            console.log("password and confirm password must be same");
+          }
+          res.status(200).json(user)
+        })
+        .catch(error=>{
+          res.status(500).json(error)
+        })
+      })
+     }
+     else {
+       res.status(200).send("This link is expired.")
+     }
+});
 //edit user
 app.put('/user/:id', (req, res) => {
   const { id } = req.params;
-  console.log(id, "id mil gyi");
   console.log(req.body);
   User.findOneAndUpdate({_id:id}, {
     $set:{

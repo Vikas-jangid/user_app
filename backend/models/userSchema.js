@@ -32,6 +32,9 @@ const UserSchema = mongoose.Schema({
         type: String,
         required: [true, 'Confirm Password is required'],
     },
+    token: {
+        type: String,
+    }
 }, { timestamps: true });
 
 export default mongoose.model('User', UserSchema);

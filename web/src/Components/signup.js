@@ -40,16 +40,14 @@ export default function SignUp() {
 
 
   const registerUser = (e) => {
-    // e.preventDefault();
-    console.log(user);
     axios.post("http://localhost:9002/signUp", user)
     .then(response => {
-      console.log(response);
+      response.send(200)
     })
     .catch(error => {
       console.log(error);
     })
-    navigate(`/`);
+    navigate(`/dashboard`);
     return false;
   };
 
@@ -84,8 +82,8 @@ export default function SignUp() {
                   value={user.first_name}
                   onChange={(e)=> {setUser({...user, ...{firstName:e.target.value}})}}
                   // {...register("firstName", {required: "First Name is required"})}
-                  error={!!errors.firstName}
-                  helperText={errors.firstName ? errors.firstName.message : null }
+                  // error={!!errors.firstName}
+                  // helperText={errors.firstName ? errors.firstName.message : null }
                 />
               </Grid>
               <Grid item xs={12} sm={6}>

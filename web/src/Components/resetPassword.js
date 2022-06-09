@@ -3,17 +3,16 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
-import {useNavigate} from 'react-router-dom';
-import AlertMassage from "./alertMessage";
+import {useNavigate, useParams} from 'react-router-dom';
+// import AlertMassage from "./alertMessage";
+
+
 
 
 function Copyright(props) {
@@ -32,29 +31,27 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignIn() {
-
-  const [email, setEmail] = useState();
+  // const { email } = useParams();
   const [password, setPassword] = useState();
+  const [confirmPassword, setConfirmPassword] = useState();
   const [status, setStatusBase] = useState();
   const navigate = useNavigate();
-
+  
   const handleSubmit = async (event) => {
     event.preventDefault();
-    await axios.post("http://localhost:9002/login", {
-      email,
+    var urlString = (window.location).href; 
+    var token =  urlString.substr(urlString.length - 32);
+    await axios.post(`http://localhost:9002/resetPassword/${token}`, {
       password,
+      confirmPassword,
     })
     .then((response) => {
-      if (response.data.token) {
-        localStorage.setItem("user", JSON.stringify(response.data.token));
-        setStatusBase({ msg: "Login Success", key: Math.random() });
-      }
-      navigate("/dashboard");
+      navigate("/login");
       window.location.reload();
       return response.data;
     })
     .catch(error => {
-      setStatusBase({ msg: "Login Failed", key: Math.random() });
+      setStatusBase({ msg: "Password Reset Failed", key: Math.random() });
     })
   };
 
@@ -72,33 +69,45 @@ export default function SignIn() {
           }}
         >
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            {/* <LockOutlinedIcon /> */}
           </Avatar>
           <Typography component="h1" variant="h5">
-            Log in
+            Reset Password
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-            <TextField
+          {/* <TextField
               margin="normal"
               required
               fullWidth
+              type="email"
               id="email"
-              label="Email Address"
+              label="Email"
               name="email"
               autoComplete="email"
               autoFocus
               onChange={e => setEmail(e.target.value)}
+            /> */}
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              type="password"
+              id="password"
+              label="Password"
+              name="password"
+              autoComplete="password"
+              autoFocus
+              onChange={e => setPassword(e.target.value)}
             />
             <TextField
               margin="normal"
               required
               fullWidth
-              name="password"
-              label="Password"
+              name="confirmPassword"
+              label="confirmPassword"
               type="password"
               id="password"
               autoComplete="current-password"
-              onChange={e => setPassword(e.target.value)}
+              onChange={e => setConfirmPassword(e.target.value)}
             />
             <Button
               type="submit"
@@ -106,20 +115,8 @@ export default function SignIn() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+              Reset Password
             </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="/forgetPassword" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="/signup" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid>
           </Box>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
