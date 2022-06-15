@@ -14,6 +14,8 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
 import {useNavigate} from 'react-router-dom';
 import AlertMassage from "./alertMessage";
+import GoogleLogin from 'react-google-login';
+import { useEffect } from 'react';
 
 
 function Copyright(props) {
@@ -57,6 +59,21 @@ export default function SignIn() {
       setStatusBase({ msg: "Login Failed", key: Math.random() });
     })
   };
+const handleSocialLogin = (token)=>{
+axios.post("http://localhost:9002/social-login", {
+        token:token
+      })
+      .then((res)=>{
+        localStorage.setItem("user", JSON.stringify(res.data.jti));
+        console.log(res.data)
+        navigate("/dashboard");
+        window.location.reload();
+        return res.data;
+      })
+      .catch(error => {
+        setStatusBase({ msg: "Login Failed", key: Math.random() });
+      })
+}
 
 
   return (
@@ -120,6 +137,17 @@ export default function SignIn() {
                 </Link>
               </Grid>
             </Grid>
+            <GoogleLogin
+              clientId="978362526203-7rjhtq97admgb4tcgliv8gerqvafvoh9.apps.googleusercontent.com"
+              buttonText="Login"
+              onSuccess={(res)=>{console.log(res);
+                handleSocialLogin(res.tokenId)
+
+              navigate("/dashboard")
+              }}
+              onFailure={(res)=>console.log(res,"res")}
+              cookiePolicy={'single_host_origin'}
+            />
           </Box>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />

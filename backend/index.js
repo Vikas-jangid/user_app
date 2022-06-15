@@ -9,6 +9,7 @@ import * as bcrypt from 'bcrypt';
 import verify from "./middleware.js";
 import Randomstring from "randomstring";
 import { resetPasswordEmail } from "./mailer/resetPassword.js";
+import jwt_decode from "jwt-decode";
 
 const app = express();
 app.use(bodyParser.urlencoded({extended : true}));
@@ -80,6 +81,7 @@ app.post('/signup', (req, res) => {
         })
       }
   });
+  
 });
 
 //User Login
@@ -107,6 +109,29 @@ app.post("/login",  (req, res) => {
     res.status(500).json(error)
   })
 });
+
+
+//User Social login
+
+app.post("/social-login", (req, res) => {
+  const { token }  = req.body
+  var decoded= jwt_decode(token);
+  console.log(decoded.email)
+  res.send(decoded);
+  new User(
+    {
+      firstName: decoded.given_name,
+      lastName: decoded.family_name,
+      email: decoded.email,
+    })
+    user.save()
+      .then(user => {
+        res.status(200).json(user)
+      })
+      .catch(error=>{
+        res.status(500).json(error)
+    })
+  })
 
 //forget password
 
