@@ -59,6 +59,7 @@ export default function SignIn() {
       setStatusBase({ msg: "Login Failed", key: Math.random() });
     })
   };
+  
 const handleSocialLogin = (token)=>{
 axios.post("http://localhost:9002/social-login", {
         token:token
@@ -142,8 +143,7 @@ axios.post("http://localhost:9002/social-login", {
               buttonText="Login"
               onSuccess={(res)=>{console.log(res);
                 handleSocialLogin(res.tokenId)
-
-              navigate("/dashboard")
+                navigate("/dashboard")
               }}
               onFailure={(res)=>console.log(res,"res")}
               cookiePolicy={'single_host_origin'}
