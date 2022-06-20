@@ -141,6 +141,7 @@ axios.post("http://localhost:9002/social-login", {
             <GoogleLogin
               clientId="978362526203-7rjhtq97admgb4tcgliv8gerqvafvoh9.apps.googleusercontent.com"
               buttonText="Login"
+              fetchBasicProfile="true"
               onSuccess={(res)=>{console.log(res);
                 handleSocialLogin(res.tokenId)
                 navigate("/dashboard")

@@ -12,7 +12,7 @@ const UserSchema = mongoose.Schema({
     },
     contactNumber: {
         type: Number,
-        required: [true, 'Contact Number is required'],
+        //required: [true, 'Contact Number is required'],
     },
     email: {
         type: String,
@@ -22,7 +22,7 @@ const UserSchema = mongoose.Schema({
     },
     gender: {
         type: String,
-        required: [true, 'Gender is required'],
+        //required: [true, 'Gender is required'],
     },
     password: {
         type: String,
