@@ -1,5 +1,5 @@
 import React from 'react';
-import Paper from '@mui/material/Paper';
+// import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
@@ -22,7 +22,7 @@ export default function Home() {
   );
 
   return (
-    <Container maxWidth="xl" sx={{mt: 10}}>
+    <Container maxWidth="xl" sx={{mt: 12}}>
           <Slider />
     <Box sx={{ flexGrow: 2 }}>
     <Grid container spacing={2}>
