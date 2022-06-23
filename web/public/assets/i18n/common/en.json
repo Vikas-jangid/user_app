@@ -1,0 +1,9 @@
+{
+    "home":"Home",
+    "userApp":"User App",
+    "login": "Login",
+    "logout":"Logout",
+    "signup": "Signup",
+    "users": "Users",
+    "forgotPassword": "Forgot Password"
+}
