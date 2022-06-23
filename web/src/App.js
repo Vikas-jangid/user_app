@@ -5,7 +5,7 @@ import Dashboard from './Components/dashboard';
 import Login from './Components/login';
 import Signup from './Components/signup';
 import Error from './Components/error';
-import Appbar from './Components/appbar'
+import Appbar from './Components/Appbar'
 import EditUser from './Components/editUser';
 import ResetPassword from './Components/resetPassword';
 import ForgetPassword from './Components/forgetPassword';
@@ -14,8 +14,8 @@ import Home from './Components/home'
 function App() {
 
   return (
-    <Suspense>
-      <Router fallback={null}> 
+    <Suspense fallback="loading..">
+      <Router > 
         <Appbar />
         <Routes>
           <Route path="/" element={<Home />} />
