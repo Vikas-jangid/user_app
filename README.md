@@ -10,5 +10,7 @@ Creating User App for React POC.
 
 1.User Registration
 2.User Login (using JWT)
-3.CRUD Operations
-4.protected routes.
+3.Login by google
+4.CRUD Operations
+5.protected routes.
+6.Internationalization
