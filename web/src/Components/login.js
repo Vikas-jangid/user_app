@@ -15,7 +15,10 @@ import axios from 'axios';
 import {useNavigate} from 'react-router-dom';
 import AlertMassage from "./alertMessage";
 import GoogleLogin from 'react-google-login';
-import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+
+
+
 
 
 function Copyright(props) {
@@ -39,6 +42,7 @@ export default function SignIn() {
   const [password, setPassword] = useState();
   const [status, setStatusBase] = useState();
   const navigate = useNavigate();
+  const { t } = useTranslation(["common"]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -92,7 +96,7 @@ axios.post("http://localhost:9002/social-login", {
             {/* <LockOutlinedIcon /> */}
           </Avatar>
           <Typography component="h1" variant="h5">
-            Log in
+            {t('login')}
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <TextField
@@ -123,12 +127,12 @@ axios.post("http://localhost:9002/social-login", {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+              {t('login')}
             </Button>
             <Grid container>
               <Grid item xs>
                 <Link href="/forgetPassword" variant="body2">
-                  Forgot password?
+                  {t('forgotPassword')}
                 </Link>
               </Grid>
               <Grid item>
@@ -139,7 +143,7 @@ axios.post("http://localhost:9002/social-login", {
             </Grid>
             <GoogleLogin
               clientId="978362526203-7rjhtq97admgb4tcgliv8gerqvafvoh9.apps.googleusercontent.com"
-              buttonText="Login"
+              buttonText={t('login')}
               onSuccess={(res)=>{console.log(res);
                 handleSocialLogin(res.tokenId)
 
