@@ -10,11 +10,34 @@ import verify from "./middleware.js";
 import Randomstring from "randomstring";
 import { resetPasswordEmail } from "./mailer/resetPassword.js";
 import jwt_decode from "jwt-decode";
+import swaggerJsDoc  from "swagger-jsdoc";
+import swaggerUi  from "swagger-ui-express";
+
+// const swaggerJsDoc = require('swagger-jsdoc');
+// const swaggerUi = require('swagger-ui-express');
+
+const swaggerOptions ={
+  swaggerDefination: {
+    info:{
+      title: 'Users Api',
+      description: 'User app api informations',
+      contact: {
+          name:'Vikas Jangid'
+      },
+      servers:['http://localhost:9002']
+    }
+  },
+  api:["index.js"]
+}
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 const app = express();
 app.use(bodyParser.urlencoded({extended : true}));
 app.use(bodyParser.json());
 app.use(cors());    
+// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 dotenv.config();
 
