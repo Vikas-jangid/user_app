@@ -1,0 +1,266 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "version": "1.0.0",
+      "title": "User App API Documentation",
+      "description": "User App Project API Documentation",
+      "license": {
+        "name": "MIT",
+        "url": "localhost:9002"
+      },
+      "author": "Vikas Jangid"
+    },
+    "host": "localhost:9002",
+    "basePath": "/",
+    "tags": [
+      {
+        "name": "ExpressJs API",
+        "description": "ExpressJs API"
+      }
+    ],
+    "schemes": ["http"],
+    "consumes": ["application/json"],
+    "produces": ["application/json"],
+    "paths": {
+        "/signup": {
+            "post": {
+              "tags": [
+                "Auth"
+              ],
+              "description": "Sign-up new user in system",
+              "parameters": [
+                {
+                  "name": "user",
+                  "in": "body",
+                  "description": "User that we want to create",
+                  "schema": {
+                        "required": [
+                          "firstName",
+                          "lastName",
+                          "email",
+                          "contactNumber",
+                          "gender",
+                          "password",
+                          "confirmPassword"
+                        ],
+                        "properties": {
+                            "firstName": {
+                                "type": "string"
+                            },
+                            "lastName": {
+                                "type": "string"
+                            },
+                            "email": {
+                              "type": "string"
+                            },
+                            "contactNumber": {
+                                "type": "number"
+                            },
+                            "gender" : {
+                                "type":"string"
+                            },
+                            "password": {
+                              "type": "string"
+                            },
+                            "confirmPassword": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+              ],
+              "produces": [
+                "application/json"
+              ],
+              "responses": {
+                "200": {
+                  "description": "Registration success",
+                  "schema": {
+                    "$ref": "#/definitions/User"
+                  }
+                }
+              }
+            }
+        },
+        "/signin": { 
+            "post": {
+                "tags": [
+                  "Auth"
+                ],
+                "description": "Sign-in  user in system",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "body",
+                        "description": "User that we want to login",
+                        "schema": {
+                            "required": [
+                                "email",
+                                "password"
+                            ],
+                            "properties": {
+                                "email": {
+                                    "type": "string"
+                                },
+                                "password": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "produces": [
+                  "application/json"
+                ],
+                "responses": {
+                  "200": {
+                    "description": "Login success",
+                    "schema": {
+                      "$ref": "#/definitions/User"
+                    }
+                  }
+                }
+              }
+        },
+        "/social-login": { 
+            "post": {
+                "tags": [
+                  "Auth"
+                ],
+                "description": "Sign-in  user in system with social media account",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "body",
+                        "description": "User that we want to login",
+                        "schema": {
+                            "required": [
+                                "token"
+                            ],
+                            "properties": {
+                                "token": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "produces": [
+                  "application/json"
+                ],
+                "responses": {
+                  "200": {
+                    "description": "Login success",
+                    "schema": {
+                      "$ref": "#/definitions/User"
+                    }
+                  }
+                }
+              }
+        },
+        "/": {
+            "get": {
+                "tags": [
+                  "User"
+                ],
+                "summary": "Get all users in system",
+                "responses": {
+                  "200": {
+                    "description": "Get all users",
+                    "schema": {
+                      "type": "array",
+                      "$ref": "#/definitions/User"
+                    }
+                  }
+                }
+            }
+        },
+        "/posts/{id}": {
+          "delete": {
+            "summary": "Delete user with given ID",
+            "tags": [
+              "User"
+            ],
+            "parameters": [
+                {
+                  "name": "id",
+                  "in": "path",
+                  "required": true,
+                  "description": "ID of user that we want to find"
+                }
+            ],
+            "responses": {
+              "200": {
+                "description": "User is deleted",
+                "schema": {
+                  "$ref": "#/definitions/User"
+                }
+              }
+            }
+          },
+          "put": {
+            "summary": "Update user with give ID",
+            "tags": [
+              "User"
+            ],
+            "parameters": [
+              {
+                "name": "post",
+                "in": "body",
+                "description": "User with new values of properties",
+                "schema": {
+                  "$ref": "#/definitions/User"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "User is updated",
+                "schema": {
+                  "$ref": "#/definitions/User"
+                }
+              }
+            }
+          }
+        }
+    },
+    "definitions": {
+        "User": {
+            "required": [
+                "firstName",
+                "lastName",
+                "email",
+                "contactNumber",
+                "gender",
+                "password",
+                "confirmPassword"
+            ],
+            "properties": {
+                "_id": {
+                    "type": "string"
+                },
+                "firstName": {
+                    "type": "string"
+                },
+                "lastName": {
+                    "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                },
+                "contactNumber": {
+                    "type": "number"
+                },
+                "gender" : {
+                    "type":"string"
+                },
+                "password": {
+                  "type": "string"
+                },
+                "confirmPassword": {
+                    "type": "string"
+                }
+            }
+        }
+    }    
+}

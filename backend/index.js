@@ -10,6 +10,8 @@ import verify from "./middleware.js";
 import Randomstring from "randomstring";
 import { resetPasswordEmail } from "./mailer/resetPassword.js";
 import jwt_decode from "jwt-decode";
+import swaggerUi  from "swagger-ui-express";
+import swaggerDocument from './swagger.json' assert {type: "json"};
 
 const app = express();
 app.use(bodyParser.urlencoded({extended : true}));
@@ -17,6 +19,21 @@ app.use(bodyParser.json());
 app.use(cors());    
 
 dotenv.config();
+
+
+
+//Swagger API Docs
+var swaggerOptionsObj = {
+    customCss: '.swagger-ui .topbar { display: none }',
+    customSiteTitle: "ExpressJs API",
+    // customfavIcon: "/assets/favicon.ico",
+};
+
+app.use(
+    '/api-docs',
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerDocument, swaggerOptionsObj)
+  );
 
 const tokenSecret = "my-token-secret"
 
